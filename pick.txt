@@ -1,0 +1,72 @@
+# PICK GAME 设计文档
+
+## 基本设置
+- **窗口大小**: 600x1000 像素
+- **全局UI元素**: 
+  - 返回按钮位置: (550, 30)
+  - 返回按钮图片: ./assets/back.png
+  - 返回按钮功能: 关闭当前游戏，启动 main_game.py
+
+## 游戏状态
+
+### 1. 初始状态 (INITIAL)
+- **背景视频**: ./assets/pick/sit.mp4 (循环播放)
+- **UI元素**:
+  - Pick按钮位置: (300, 850)
+  - Pick按钮图片: ./assets/pick/pick_button.png
+  - 点击行为: 进入抽签状态
+
+### 2. 抽签状态 (PICKING)
+- **动作序列**:
+  1. 隐藏Pick按钮
+  2. 停止sit.mp4
+  3. 播放 ./assets/pick/pick.mp4
+  4. 视频播放完毕后，随机选择YES或NO
+
+### 3. YES路径
+
+#### 3.1 播放YES视频 (SHOWING_MONK_YES)
+- 播放: ./assets/pick/monk_yes.MP4
+- 播放完毕后进入3.2
+
+#### 3.2 显示继续按钮 (SHOW_CONTINUE)
+- **背景图片**: ./assets/pick/bg2.png
+- **UI元素**:
+  - CONTINUE按钮位置: (300, 850)
+  - CONTINUE按钮样式: 文字按钮，白色文字，灰色背景
+  - 点击行为: 进入3.3
+
+#### 3.3 文档显示 (SHOW_DOCUMENT)
+- **功能**:
+  1. 随机选择1-4的数字x
+  2. 读取并显示 ./assets/pick/docs/x.txt
+  3. 使用中文字体 (Windows: SimHei)
+  4. 支持鼠标滚轮上下滚动
+- **UI元素**:
+  - BACK按钮位置: (300, 850)
+  - BACK按钮样式: 文字按钮，白色文字，灰色背景
+  - 点击行为: 返回初始状态
+
+### 4. NO路径
+
+#### 4.1 播放NO视频 (SHOWING_MONK_NO)
+- 播放: ./assets/pick/monk_no.MP4
+- 播放完毕后进入4.2
+
+#### 4.2 显示选择弹窗 (SHOW_POPUP)
+- **背景图片**: ./assets/pick/bg1.png
+- **弹窗内容**:
+  - 标题: "Pick Again?"
+  - 位置: 屏幕中央
+  - 大小: 400x200 像素
+  - 边框: 白色，3像素
+- **按钮选项**:
+  - Yes按钮: 点击返回初始状态
+  - No按钮: 点击关闭游戏，启动 main_game.py
+
+## 技术要求
+1. 使用pygame和opencv-python
+2. 视频播放支持循环功能
+3. 中文文本渲染使用系统字体
+4. 文档滚动边界检测，防止滚动超出内容范围
+5. 所有状态转换都要正确释放资源

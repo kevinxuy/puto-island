@@ -1,0 +1,161 @@
+🎮 PUTO ISLAND ECONOMY SYSTEM
+================================
+
+📊 INITIAL PLAYER RESOURCES
+- MP (Magic Power): 10
+- Coins: 10000
+
+💰 BUILDING INCOME GENERATION
+================================
+
+🏛️ TEMPLES (2 temples available)
+- Base income (XT): 100 coins/hour
+- Max level (YT): 25
+- Level upgrade increase (PT): 10%
+- Workers required: 10
+- Income formula: XT * (1 + PT/100)^(level-1)
+- Level 25 income: ~1,085 coins/hour per temple
+
+🏨 HOTELS (1 hotel available)  
+- Base income (XH): 150 coins/hour
+- Max level (YH): 25
+- Level upgrade increase (PH): 12%
+- Workers required: 10
+- Income formula: XH * (1 + PH/100)^(level-1)
+- Level 25 income: ~2,244 coins/hour per hotel
+
+🍴 RESTAURANTS (1 restaurant available)
+- Base income (XR): 80 coins/hour  
+- Max level (YR): 25
+- Level upgrade increase (PR): 15%
+- Workers required: 10
+- Income formula: XR * (1 + PR/100)^(level-1)
+- Level 25 income: ~2,668 coins/hour per restaurant
+
+🏠 WORKERS HOUSE (APT1)
+- Base worker capacity (XW): 50 workers
+- Max level (YW): 25
+- Level upgrade increase (PW): 20%
+- Workers required to operate: 10
+- MP consumption (CW): 2 MP/hour
+- Capacity formula: XW * (1 + PW/100)^(level-1)
+- Level 25 capacity: ~3,948 workers per house
+
+💎 STRUCTURE UPGRADE COSTS
+================================
+
+🏛️ TEMPLE STRUCTURES (5 per temple)
+Base costs:
+- Structure 1 (Ct1): 10 coins
+- Structure 2 (Ct2): 15 coins
+- Structure 3 (Ct3): 20 coins
+- Structure 4 (Ct4): 25 coins
+- Structure 5 (Ct5): 30 coins
+- Cost multiplier (upgrade_cost_temple): 1.5x per level
+- Formula: Base_cost * (upgrade_cost_temple)^(next_level-1)
+
+🏨 HOTEL STRUCTURES (5 per hotel)
+Base costs:
+- Structure 1 (Ch1): 15 coins
+- Structure 2 (Ch2): 20 coins
+- Structure 3 (Ch3): 25 coins
+- Structure 4 (Ch4): 30 coins
+- Structure 5 (Ch5): 35 coins
+- Cost multiplier (upgrade_cost_hotel): 1.6x per level
+- Formula: Base_cost * (upgrade_cost_hotel)^(next_level-1)
+
+🍴 RESTAURANT STRUCTURES (5 per restaurant)
+Base costs:
+- Structure 1 (Cr1): 8 coins
+- Structure 2 (Cr2): 12 coins
+- Structure 3 (Cr3): 16 coins
+- Structure 4 (Cr4): 20 coins
+- Structure 5 (Cr5): 24 coins
+- Cost multiplier (upgrade_cost_restaurant): 1.4x per level
+- Formula: Base_cost * (upgrade_cost_restaurant)^(next_level-1)
+
+🏠 WORKERS HOUSE STRUCTURES (5 per house)
+Base costs:
+- Structure 1 (Ca1): 5 coins
+- Structure 2 (Ca2): 8 coins
+- Structure 3 (Ca3): 11 coins
+- Structure 4 (Ca4): 14 coins
+- Structure 5 (Ca5): 17 coins
+- Cost multiplier (upgrade_cost_apt): 1.3x per level
+- Formula: Base_cost * (upgrade_cost_apt)^(next_level-1)
+
+🎯 MP (MAGIC POWER) SYSTEM
+================================
+
+🎡 PRAYER WHEEL (zjt.py) GENERATION
+- Base MP generation: 1 MP per full video cycle (7 seconds at V4)
+- Temple level buff: +5% MP generation per temple level
+- Total MP formula: Base_MP * (1 + 0.05 * average_temple_level)
+
+⏱️ DAILY PRAYER REQUIREMENTS
+- Building levels 0-4: 1 minute/day
+- Building levels 5-9: 2 minutes/day  
+- Building levels 10-19: 3 minutes/day
+- Building levels 20-24: 4 minutes/day
+- Building level 25: 5 minutes/day
+
+MP CONSUMPTION
+- Workers House: 2 MP/hour per house
+- All other buildings: 0 MP/hour
+
+🏝️ ISLAND LEVEL SYSTEM
+================================
+
+- Island Level = Minimum building level across all buildings
+- Character spawn speed increase: 5% per island level
+- Character movement speed increase: 5% per island level
+- Display location: Top left corner of mainmap.py
+
+📈 ECONOMY BALANCING NOTES
+================================
+
+1. EARLY GAME (Levels 1-5)
+   - Players start with enough coins for 2-3 structure upgrades
+   - MP is sufficient for 5 hours of Workers House operation
+   - Focus on upgrading 1-2 buildings first
+
+2. MID GAME (Levels 6-15)
+   - Income starts compounding significantly
+   - Prayer wheel time increases gradually
+   - Need to balance worker capacity with building requirements
+
+3. LATE GAME (Levels 16-25)
+   - Massive income generation (10,000+ coins/hour possible)
+   - Prayer requirements become significant (4-5 minutes/day)
+   - Strategic choices about which buildings to max first
+
+4. WORKER ECONOMY
+   - Total workers needed at max: 40 (4 buildings × 10 workers)
+   - One Workers House at level 1 provides 50 workers (sufficient)
+   - Upgrading Workers House provides worker surplus for future buildings
+
+5. UPGRADE STRATEGY TIPS
+   - Temples: Steady, reliable income
+   - Hotels: Higher base income, good mid-game choice
+   - Restaurants: Highest growth rate, best late-game income
+   - Workers House: Essential infrastructure, upgrade as needed
+
+📊 TOTAL COST TO MAX ONE BUILDING (5 structures to level 5)
+================================
+
+🏛️ TEMPLE: ~563 coins total
+🏨 HOTEL: ~1,156 coins total  
+🍴 RESTAURANT: ~359 coins total
+🏠 WORKERS HOUSE: ~184 coins total
+
+Note: These are costs to get all 5 structures in one building to level 5 (the point where characters become satisfied). Maxing to level 25 would cost exponentially more.
+
+💡 IMPLEMENTATION NOTES
+================================
+
+1. All building income is calculated per hour but should be accumulated in real-time
+2. MP consumption is also per hour but deducted in real-time
+3. If MP reaches 0, all buildings stop generating income
+4. Building levels in each location (T1, T2, H1, R1, A1) track the minimum structure level
+5. The game should save state every time any value changes
+6. Time-based calculations should account for time elapsed between game sessions

@@ -1,0 +1,90 @@
+name: 🏝️ Build Puto Island APK
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: 📱 Android APK Build
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    
+    steps:
+    - name: 📥 Checkout code
+      uses: actions/checkout@v4
+    
+    - name: 🐍 Set up Python 3.9
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+        
+    - name: ☕ Set up Java 17
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin'
+        java-version: '17'
+        
+    - name: 📦 Cache buildozer global directory
+      uses: actions/cache@v3
+      with:
+        path: ~/.buildozer
+        key: buildozer-${{ hashFiles('buildozer.spec') }}
+        
+    - name: 📦 Cache pip packages
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: pip-${{ hashFiles('requirements.txt') }}
+        
+    - name: 🔧 Install system dependencies
+      run: |
+        sudo apt-get update -qq
+        sudo apt-get install -y \
+          build-essential \
+          git \
+          zip \
+          unzip \
+          openjdk-17-jdk \
+          autoconf \
+          libtool \
+          pkg-config \
+          zlib1g-dev \
+          libncurses5-dev \
+          libncursesw5-dev \
+          libtinfo5 \
+          cmake \
+          libffi-dev \
+          libssl-dev \
+          python3-setuptools
+        
+    - name: 🐍 Install Python dependencies
+      run: |
+        python -m pip install --upgrade pip wheel setuptools
+        pip install buildozer cython==0.29.37
+        pip install -r requirements.txt || true
+        
+    - name: 🔨 Build APK
+      run: |
+        buildozer android debug
+        
+    - name: 📱 Upload APK artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: puto-island-apk-${{ github.sha }}
+        path: bin/*.apk
+        retention-days: 30
+        
+    - name: 📊 APK Info
+      run: |
+        if [ -f bin/*.apk ]; then
+          echo "✅ APK built successfully!"
+          ls -lah bin/*.apk
+          du -h bin/*.apk
+        else
+          echo "❌ APK not found"
+          exit 1
+        fi

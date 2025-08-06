@@ -1,0 +1,74 @@
+Temple2 系统修改记录
+===================
+
+最近修改 (2025-08-06)
+--------------------
+
+### 1. 建筑显示逻辑修改
+**问题**: 建筑在某些条件下不显示
+**解决方案**: 修改了 Building 类的 draw() 方法，建筑现在在以下条件下显示最终形态：
+- 当个体建筑等级 = 5 时
+- 当个体建筑等级 > 0 时（显示建造中图像，等级1-4）
+- 当 Temple2 整体等级 (T2) > 0 时（所有建筑显示最终形态）
+
+**修改位置**: 
+- Building.draw() 方法 (第237-263行)
+- Game.draw() 方法中的建筑绘制逻辑 (第679-691行)
+
+### 2. 建筑等级初始化修复
+**问题**: 进入 temple2.py 时，建筑等级进度条总是显示为0
+**解决方案**: 在游戏初始化时从 game_manager 加载保存的建筑等级
+
+**修改位置**:
+- Game.__init__() 方法中的建筑创建部分 (第560-570行)
+- 现在会：
+  1. 从 game_manager 读取每个建筑的保存等级
+  2. 设置 building.level 为保存的值
+  3. 如果等级为5，设置 showing_final = True
+
+### 关键代码片段
+
+1. Building.draw() 方法签名更新：
+```python
+def draw(self, screen, map_obj, temple2_level=0):
+    # temple2_level 参数用于检查整体等级
+```
+
+2. 显示逻辑（包括位置判断）：
+```python
+if self.showing_final or self.level == 5 or temple2_level > 0:
+    # 使用最终位置
+    final_pos = FINAL_BUILDING_POSITIONS[self.index]
+    screen_pos = map_obj.world_to_screen(final_pos)
+else:
+    screen_pos = map_obj.world_to_screen(self.center)
+```
+
+3. 最终建筑显示条件：
+```python
+elif self.showing_final or self.level == 5 or temple2_level > 0:
+    # 显示最终建筑图像
+```
+
+4. 初始化时加载等级：
+```python
+for i, center in enumerate(BUILDING_CENTERS):
+    building = Building(i, center)
+    structure_id = f't2_{i+1}'
+    saved_level = game_manager.get_structure_level('temple2', structure_id)
+    building.level = saved_level
+    if saved_level == 5:
+        building.showing_final = True
+```
+
+### 影响范围
+- 建筑显示逻辑
+- 建筑位置（最终形态使用 FINAL_BUILDING_POSITIONS）
+- 游戏初始化流程
+- 进度条显示准确性
+
+### 测试要点
+1. 验证建筑在不同等级下的显示是否正确
+2. 验证 Temple2 整体等级 > 0 时所有建筑是否显示最终形态
+3. 验证重新进入游戏时进度条是否正确显示保存的等级
+4. 验证最终建筑位置是否正确使用 FINAL_BUILDING_POSITIONS

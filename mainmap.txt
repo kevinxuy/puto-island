@@ -1,0 +1,175 @@
+主地图
+要做一个游戏，窗口大小为600 x 1000 pixels.
+分为两层，map层和UI层。
+
+Map层：
+背景地图用 ./assets/mainmap/mainmap.png, 居中
+地图用鼠标drag来scroll.
+要注意边界条件，不要scroll出地图的边界。
+
+地图位置定义：
+在地图上有这些点的坐标。
+B1: 448, 518
+C2: 417, 507
+C3: 271, 610
+C4: 479, 401
+R1: 237, 578
+A1: 327, 666
+C1: 472, 241
+H1: 342, 128
+T1: 638, 417
+T2: 641, 193
+
+路径定义：
+有一条大路贯穿C1, C4, C2, C3，按次序相连。 
+路径连接规则（双向连接）：
+- B1 连接 C2
+- C2 连接 B1, C3, C4
+- C3 连接 C2, C4, R1, A1
+- C4 连接 C3, C2, C1, T1
+- C1 连接 C4, H1, T2
+- R1 连接 C3
+- A1 连接 C3
+- H1 连接 C1
+- T1 连接 C4
+- T2 连接 C1
+
+路径寻找算法：使用BFS（广度优先搜索）计算最短路径。
+
+建筑系统：
+我们有五个建筑（buildings）：Temple1, Temple2, Hotel1, Apt1, Restaurant1
+建筑中心点坐标：
+- BT1 (Temple1): 685, 377
+- BT2 (Temple2): 730, 129  
+- BH1 (Hotel1): 382, 74
+- BA1 (Apt1): 364, 737
+- BR1 (Restaurant1): 177, 532
+
+建筑到达点（小人走到这里表示到达建筑）：
+- T1: Temple1的到达点
+- T2: Temple2的到达点
+- H1: Hotel1的到达点
+- A1: Apt1的到达点
+- R1: Restaurant1的到达点
+
+在建筑中心位置放置图标 ./assets/emptyland.png，尺寸缩放为0.5
+
+建筑升级系统：
+- 每个建筑初始状态为level 0（未升级）
+- 点击建筑按钮右侧可以升级到level 1
+- level 1的建筑可以满足小人需求
+
+小人（Character）系统：
+生成规则：
+- 在B1位置spawn小人
+- 生成间隔：随机1-10秒
+- 小人类型：随机选择c1到c9（对应./assets/characters/目录下的9种小人）
+- 小人尺寸：0.5倍缩放
+- 移动速度：0.5像素/帧
+
+小人状态系统：
+- MOVING：正常移动状态
+- AT_DESTINATION：到达目的地，在建筑内停留
+- DISAPPOINTED：失望状态，建筑未升级
+- SATISFIED_LEAVING：满意离开状态，从建筑出来
+
+小人动画系统：
+- 每个小人有4个方向的动画（左、右、下、上）
+- 每个方向4帧，每帧显示250毫秒
+- 文件命名：cx_y-z.png（x=角色编号1-9，y=方向1-4，z=帧数1-4）
+- 方向定义：1=左，2=右，3=下，4=上
+
+小人行为逻辑：
+1. 目的地选择：随机选择 R1, H1, T2, T1, A1 之一
+2. 路径计算：使用BFS算法计算从当前位置到目的地的最短路径
+3. 生命周期：2分钟后自动返回B1
+
+小人图标显示规则：
+- 去H1/A1时（想睡觉）：顶着 ./assets/sleepy.png
+- 去R1时（想吃饭）：顶着 ./assets/burger.png  
+- 去T1/T2时（想拜佛）：顶着 ./assets/budda.png
+- 正常返回B1时：顶着 ./assets/bye.png
+- 满意离开时：顶着 ./assets/coin.png（到达大路C1/C2/C3/C4后恢复原图标）
+- 失望时：不显示任何图标，只显示失望文字
+
+小人到达目的地行为（重要说明）：
+1. 到达后立即检查对应建筑等级
+2. 如果建筑level >= 1（建筑已升级，小人满意）：
+   - 状态变为AT_DESTINATION
+   - 小人变为不可见（不渲染）
+   - 停留20秒
+   - 之后重新出现，状态变为SATISFIED_LEAVING
+   - 顶着coin图标离开
+   - 到达大路（C1/C2/C3/C4）后恢复正常状态和图标
+   - 选择新目的地或返回B1（根据生命周期）
+3. 如果建筑level < 1（建筑未升级，小人失望）：
+   - 状态变为DISAPPOINTED
+   - 立即计算返回B1的路径
+   - 设置destination = "B1"
+   - 显示失望文字（H1/A1: "No Hotel!", R1: "No Food!", T1/T2: "No Buddha!"）
+   - 不显示任何图标（重要：失望时不显示原图标，也不显示bye图标）
+
+小人消失条件：
+- 当destination == "B1"且到达B1位置（距离<10像素）时立即从游戏中移除
+
+UI层：
+升级按钮系统：
+- upgrade_button图片：./assets/upgrade_button.png（200x84像素）
+- 按钮分为左右两部分：
+  - 左侧：显示建筑信息
+  - 右侧：执行升级操作
+
+建筑按钮定义（透明150x150区域）：
+- T1_button：中心在BT1，点击后在下方60像素处显示upgrade_button
+  - 左侧信息："Puto Temples, composed of three temple in this location, is one the most visited place."
+  - 右侧操作：打开temple1.py，升级建筑到level 1
+- T2_button：中心在BT2
+  - 左侧信息："Buddha's garden, a sacred garden blessed by the ancient Buddha."
+  - 右侧操作：打开temple2.py，升级建筑到level 1
+- R1_button：中心在BR1
+  - 左侧信息："Welcome to our food court, we have 5 restaurants at this location, please come in!"
+  - 右侧操作：打开restaurant1.py，升级建筑到level 1
+- A1_button：中心在BA1
+  - 左侧信息："Apartment is a quiet area for all the employees to rest, it features an apartment complex, a coffee, a gym and a cafeteria!"
+  - 右侧操作：打开apt1.py，升级建筑到level 1
+- H1_button：中心在BH1
+  - 左侧信息："Hotel area is on the west side of the island, consist of 5 hotels from a 3 star to 5 star!"
+  - 右侧操作：打开hotel1.py，升级建筑到level 1
+
+信息窗口：
+- 尺寸：400x600像素
+- 位置：屏幕中央(100, 200)
+- 点击窗口外部关闭
+
+地图自动居中（动画效果）：
+- 点击建筑时，地图会平滑滚动让该建筑居中显示
+- 动画时长：0.5秒
+- 使用ease-in-out cubic缓动函数，实现自然的加速减速效果
+- 如果在动画过程中开始拖拽地图，动画会立即取消
+- 始终遵守地图边界限制
+
+底部UI按钮：
+- turn_button：中心(300,900)，尺寸130x135，图片./assets/mainmap/turn.png，点击打开zjt.py
+- ask_button：中心(450,900)，尺寸110x120，图片./assets/mainmap/ask.png，点击打开ask.py  
+- pick_button：中心(150,900)，尺寸110x133，图片./assets/mainmap/pick.png，点击打开pick.py
+
+技术实现要点：
+1. 使用pygame开发
+2. 帧率：60 FPS
+3. 坐标系：左上角为(0,0)
+4. 渲染顺序：背景 -> emptyland图标 -> 小人 -> UI层
+5. 小人的z-index：在美术层之上，UI层之下
+6. 使用subprocess.Popen打开子游戏文件
+7. 主游戏文件：main_game.py
+
+修改记录（2025-07-31）：
+1. 修正了小人失望状态的图标显示逻辑：
+   - 失望时不显示任何图标，只显示失望文字
+   - 失望时保持原目的地记录，用于显示正确的失望文字
+2. 实现了小人满意离开的完整流程：
+   - 满意后显示coin图标
+   - 到达大路（C1/C2/C3/C4）后恢复正常图标
+3. 添加了地图平滑居中动画：
+   - 点击建筑时0.5秒内平滑滚动到中心
+   - 使用ease-in-out cubic缓动函数
+   - 拖拽时会取消动画

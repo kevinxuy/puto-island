@@ -1,0 +1,16 @@
+# Buildozer files
+.buildozer/
+bin/
+*.pyc
+__pycache__/
+
+# macOS files
+.DS_Store
+
+# IDE files
+.vscode/
+.idea/
+
+# Temporary files
+*.tmp
+*.log

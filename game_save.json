@@ -1,0 +1,245 @@
+{
+  "player": {
+    "mp": 0,
+    "coins": 55094.86127622581,
+    "last_save_time": "2025-08-06T12:44:59.305874",
+    "total_play_time": 0
+  },
+  "buildings": {
+    "temple1": {
+      "building_level": 0,
+      "completion_count": 6,
+      "is_upgraded": false,
+      "structures": {
+        "t1_1": {
+          "level": 0,
+          "is_built": false
+        },
+        "t1_2": {
+          "level": 0,
+          "is_built": false
+        },
+        "t1_3": {
+          "level": 0,
+          "is_built": false
+        },
+        "t1_4": {
+          "level": 0,
+          "is_built": false
+        },
+        "t1_5": {
+          "level": 0,
+          "is_built": false
+        }
+      },
+      "income_per_hour": 161.05100000000004,
+      "workers_assigned": 10,
+      "last_income_collected": 1754458020.8386514
+    },
+    "temple2": {
+      "building_level": 0,
+      "completion_count": 4,
+      "is_upgraded": false,
+      "structures": {
+        "t2_1": {
+          "level": 3,
+          "is_built": true
+        },
+        "t2_2": {
+          "level": 0,
+          "is_built": false
+        },
+        "t2_3": {
+          "level": 3,
+          "is_built": true
+        },
+        "t2_4": {
+          "level": 0,
+          "is_built": false
+        },
+        "t2_5": {
+          "level": 0,
+          "is_built": false
+        }
+      },
+      "income_per_hour": 133.10000000000005,
+      "workers_assigned": 10,
+      "last_income_collected": 1754458020.8386514
+    },
+    "hotel1": {
+      "building_level": 0,
+      "completion_count": 2,
+      "is_upgraded": false,
+      "structures": {
+        "h1": {
+          "level": 5,
+          "is_built": true
+        },
+        "h2": {
+          "level": 5,
+          "is_built": true
+        },
+        "h3": {
+          "level": 0,
+          "is_built": false
+        },
+        "h4": {
+          "level": 0,
+          "is_built": false
+        },
+        "h5": {
+          "level": 0,
+          "is_built": false
+        }
+      },
+      "income_per_hour": 168.00000000000003,
+      "workers_assigned": 10,
+      "last_income_collected": 1754458020.8386514
+    },
+    "restaurant1": {
+      "building_level": 0,
+      "completion_count": 1,
+      "is_upgraded": false,
+      "structures": {
+        "r1": {
+          "level": 0,
+          "is_built": false
+        },
+        "r2": {
+          "level": 0,
+          "is_built": false
+        },
+        "r3": {
+          "level": 0,
+          "is_built": false
+        },
+        "r4": {
+          "level": 0,
+          "is_built": false
+        },
+        "r5": {
+          "level": 0,
+          "is_built": false
+        }
+      },
+      "income_per_hour": 80.0,
+      "workers_assigned": 10,
+      "last_income_collected": 1754458020.8386514
+    },
+    "apt1": {
+      "building_level": 5,
+      "completion_count": 2,
+      "is_upgraded": true,
+      "structures": {
+        "a1": {
+          "level": 5,
+          "is_built": true
+        },
+        "a2": {
+          "level": 5,
+          "is_built": true
+        },
+        "a3": {
+          "level": 5,
+          "is_built": true
+        },
+        "a4": {
+          "level": 5,
+          "is_built": true
+        },
+        "a5": {
+          "level": 5,
+          "is_built": true
+        }
+      },
+      "worker_capacity": 0,
+      "mp_consumption_per_hour": 0,
+      "workers_assigned": 10,
+      "last_mp_consumed": 1754463350.2869577,
+      "income_per_hour": 0
+    }
+  },
+  "economy": {
+    "base_income": {
+      "temple": 100,
+      "hotel": 150,
+      "restaurant": 80
+    },
+    "upgrade_multipliers": {
+      "temple": 0.1,
+      "hotel": 0.12,
+      "restaurant": 0.15,
+      "apt": 0.2
+    },
+    "upgrade_costs": {
+      "temple": {
+        "base_costs": [
+          10,
+          15,
+          20,
+          25,
+          30
+        ],
+        "cost_multiplier": 1.5
+      },
+      "hotel": {
+        "base_costs": [
+          15,
+          20,
+          25,
+          30,
+          35
+        ],
+        "cost_multiplier": 1.6
+      },
+      "restaurant": {
+        "base_costs": [
+          8,
+          12,
+          16,
+          20,
+          24
+        ],
+        "cost_multiplier": 1.4
+      },
+      "apt": {
+        "base_costs": [
+          5,
+          8,
+          11,
+          14,
+          17
+        ],
+        "cost_multiplier": 1.3
+      }
+    },
+    "worker_requirements": {
+      "temple": 10,
+      "hotel": 10,
+      "restaurant": 10,
+      "apt": 10
+    },
+    "apt_base_capacity": 50,
+    "apt_mp_consumption": 2
+  },
+  "island": {
+    "level": 0,
+    "spawn_speed_multiplier": 1.0,
+    "movement_speed_multiplier": 1.0
+  },
+  "prayer_wheel": {
+    "total_mp_generated": 5.0,
+    "total_spins": 0,
+    "current_progress": 0,
+    "temple_level_bonus": 0.0
+  },
+  "statistics": {
+    "total_coins_earned": 79964.2325262258,
+    "total_coins_spent": 36683.12125,
+    "total_mp_generated": 5.0,
+    "total_mp_consumed": 14.999999999999993,
+    "total_upgrades": 441,
+    "buildings_completed": 0
+  },
+  "version": "1.0.0"
+}
