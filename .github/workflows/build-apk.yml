@@ -66,12 +66,17 @@ jobs:
         pip install buildozer cython==0.29.37
         pip install pygame==2.5.2
         
-    - name: 🔨 Build APK
+    - name: 🔨 Build APK  
       run: |
+        # Copy pygame-specific buildozer spec
+        cp buildozer_pygame.spec buildozer.spec
+        
         export BUILDOZER_WARN_ON_ROOT=0
         export ANDROID_HOME=$HOME/.buildozer/android/platform/android-sdk
         export ANDROID_SDK_ROOT=$HOME/.buildozer/android/platform/android-sdk
-        yes | buildozer -v android debug
+        
+        # Try pygame2 build
+        yes | buildozer android debug
         
     - name: 📱 Upload APK artifact
       uses: actions/upload-artifact@v4

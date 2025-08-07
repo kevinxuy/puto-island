@@ -1,0 +1,47 @@
+name: 🐳 Build APK with Docker
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main, master ]
+    paths: ['buildozer_docker.spec']
+
+jobs:
+  build:
+    name: 📱 Docker APK Build  
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+
+    steps:
+    - name: 📥 Checkout code
+      uses: actions/checkout@v4
+
+    - name: 🐳 Build APK using Docker
+      run: |
+        # Create buildozer spec for Docker build
+        cat > buildozer_docker.spec << 'EOF'
+        [app]
+        title = Puto Island
+        package.name = putoisland
+        package.domain = org.test
+        source.dir = .
+        source.include_exts = py,png,jpg
+        version = 1.0
+        requirements = python3,kivy
+        orientation = portrait
+
+        [buildozer]
+        log_level = 1
+        EOF
+        
+        # Run buildozer in Docker container
+        docker run --rm -v "$PWD":/app -w /app kivy/buildozer:latest bash -c "
+          buildozer android debug
+        "
+        
+    - name: 📱 Upload APK artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: puto-island-docker-apk
+        path: bin/*.apk
+        retention-days: 30
