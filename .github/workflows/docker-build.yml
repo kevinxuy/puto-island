@@ -18,24 +18,29 @@ jobs:
 
     - name: 🐳 Build APK using Docker
       run: |
-        # Create buildozer spec for Docker build
-        cat > buildozer_docker.spec << 'EOF'
+        # Create minimal buildozer spec
+        cat > buildozer.spec << 'EOF'
         [app]
         title = Puto Island
         package.name = putoisland
         package.domain = org.test
         source.dir = .
-        source.include_exts = py,png,jpg
+        source.include_exts = py
         version = 1.0
         requirements = python3,kivy
         orientation = portrait
-
+        android.api = 30
+        android.minapi = 21
+        android.private_storage = True
+        android.archs = armeabi-v7a
         [buildozer]
         log_level = 1
         EOF
         
-        # Run buildozer in Docker container
+        # Run buildozer in Docker with pre-accepted licenses
         docker run --rm -v "$PWD":/app -w /app kivy/buildozer:latest bash -c "
+          echo 'Accepting all licenses...'
+          yes | sdkmanager --licenses > /dev/null 2>&1 || true
           buildozer android debug
         "
         
