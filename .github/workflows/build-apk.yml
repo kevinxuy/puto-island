@@ -68,14 +68,14 @@ jobs:
         
     - name: 🔨 Build APK  
       run: |
-        # Copy pygame-specific buildozer spec
-        cp buildozer_pygame.spec buildozer.spec
+        # Use minimal kivy buildozer spec
+        cp buildozer_minimal.spec buildozer.spec
         
         export BUILDOZER_WARN_ON_ROOT=0
         export ANDROID_HOME=$HOME/.buildozer/android/platform/android-sdk
         export ANDROID_SDK_ROOT=$HOME/.buildozer/android/platform/android-sdk
         
-        # Try pygame2 build
+        # Build with Kivy
         yes | buildozer android debug
         
     - name: 📱 Upload APK artifact
